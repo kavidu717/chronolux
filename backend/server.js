@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import connectDB from './src/config/db.js'
+import authRoutes from './src/routes/authRoutes.js'
 
 
 
@@ -19,6 +20,8 @@ connectDB()
 app.get('/', (req, res) => {
     res.send('backend running kaviduheloo with docker hello neda kavidu')
 })
+
+app.use("/api/auth",authRoutes)
 
 
 app.listen(5000, () => {
