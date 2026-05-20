@@ -3,6 +3,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import connectDB from './src/config/db.js'
 import authRoutes from './src/routes/authRoutes.js'
+import productRoutes from './src/routes/productRoutes.js'
 
 
 
@@ -22,6 +23,10 @@ app.get('/', (req, res) => {
 })
 
 app.use("/api/auth",authRoutes)
+app.use("/api/products",productRoutes);
+
+console.log("CLOUD NAME:", process.env.CLOUDINARY_CLOUD_NAME);
+console.log("API KEY:", process.env.CLOUDINARY_API_KEY);
 
 
 app.listen(5000, () => {
