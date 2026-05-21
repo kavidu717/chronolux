@@ -8,6 +8,8 @@ import ProductDetails from "./Pages/ProductDetails"
 import Cart from "./Pages/Cart"
 import Checkout from "./Pages/Checkout"
 import PaymentSuccess from "./Pages/PaymentSuccess"
+import Profile from "./Pages/Profile"
+import MyOrders from "./Pages/MyOrders"
 
 
 
@@ -27,7 +29,8 @@ function App() {
          <Route path="/cart" element={<Cart />} />
          <Route path="/checkout" element={<Checkout />} />
          <Route path="/payment-success" element={<PaymentSuccess />} />
-
+         <Route path="/profile" element={<Profile />} />
+         <Route path="/my-orders" element={<MyOrders />} />
 
 
         

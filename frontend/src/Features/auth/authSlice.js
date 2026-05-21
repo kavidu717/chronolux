@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { registerUser, loginUser } from "./authAPI.js";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getProfile, loginUser, registerUser } from "./authAPI.js";
 
 const loadStoredUser = () => {
   const rawUser = localStorage.getItem("user");
@@ -22,21 +22,14 @@ const loadStoredToken = () => {
   return token && token !== "undefined" ? token : null;
 };
 
-
-// 🔐 LOGIN
-export const login = createAsyncThunk(
-  "auth/login",
-  async (data, thunkAPI) => {
-    try {
-      return await loginUser(data);
-    } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data);
-    }
+export const login = createAsyncThunk("auth/login", async (data, thunkAPI) => {
+  try {
+    return await loginUser(data);
+  } catch (err) {
+    return thunkAPI.rejectWithValue(err.response?.data);
   }
-);
+});
 
-
-// 🆕 REGISTER
 export const register = createAsyncThunk(
   "auth/register",
   async (data, thunkAPI) => {
@@ -48,11 +41,22 @@ export const register = createAsyncThunk(
   }
 );
 
+export const fetchProfile = createAsyncThunk(
+  "auth/profile",
+  async (_, thunkAPI) => {
+    try {
+      return await getProfile();
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data);
+    }
+  }
+);
 
 const storedToken = loadStoredToken();
+const storedUser = loadStoredUser();
 
 const initialState = {
-  user: loadStoredUser(),
+  user: storedUser,
   token: storedToken,
   loading: false,
   error: null,
@@ -60,12 +64,24 @@ const initialState = {
   isAuthenticated: !!storedToken
 };
 
+const persistAuth = (user, token) => {
+  if (user) {
+    localStorage.setItem("user", JSON.stringify(user));
+  } else {
+    localStorage.removeItem("user");
+  }
+
+  if (token) {
+    localStorage.setItem("token", token);
+  } else {
+    localStorage.removeItem("token");
+  }
+};
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-
     logout: (state) => {
       state.user = null;
       state.token = null;
@@ -74,66 +90,62 @@ const authSlice = createSlice({
       state.error = null;
       state.success = false;
 
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
+      persistAuth(null, null);
     }
-
   },
-
   extraReducers: (builder) => {
     builder
+      .addCase(login.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.success = true;
+        state.user = action.payload.user || null;
+        state.token = action.payload.token;
+        state.isAuthenticated = !!action.payload.token;
 
-      // ================= LOGIN =================
-        .addCase(login.pending, (state) => {
-  state.loading = true;
-  state.error = null;
-})
-
-.addCase(login.fulfilled, (state, action) => {
-  state.loading = false;
-
-  // ✅ USER + TOKEN
-  state.user = action.payload.user;
-  state.token = action.payload.token;
-
-  state.success = true;
-
-  state.isAuthenticated = true;
-
-  // 💾 LOCAL STORAGE
-  localStorage.setItem("user", JSON.stringify(action.payload.user));
-  localStorage.setItem("token", action.payload.token);
-})
-
-.addCase(login.rejected, (state, action) => {
-  state.loading = false;
-  state.error = action.payload?.message || "Login failed";
-})
-
-
-      // ================= REGISTER =================
+        persistAuth(state.user, state.token);
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Login failed";
+      })
       .addCase(register.pending, (state) => {
         state.loading = true;
         state.error = null;
         state.success = false;
       })
-
       .addCase(register.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user;
-
-        // ✅ IMPORTANT FIX
+        state.error = null;
         state.success = true;
+        state.user = action.payload.user || null;
       })
-
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload?.message;
-      });
+        state.error = action.payload?.message || action.payload?.error;
+      })
+      .addCase(fetchProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.user = action.payload;
+        state.isAuthenticated = !!state.token;
 
+        persistAuth(state.user, state.token);
+      })
+      .addCase(fetchProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Failed to load profile";
+      });
   }
 });
-
 
 export const { logout } = authSlice.actions;
 export default authSlice.reducer;
