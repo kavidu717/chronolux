@@ -1,7 +1,10 @@
+import Herosection from "../Components/Herosection"
+
+
 export default function Home(){
     return(
         <>
-        <h1>Home</h1>
+       <Herosection />
         </>
        
     )

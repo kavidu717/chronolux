@@ -1,16 +1,13 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchCart } from "../Features/cart/cartSlice";
-import api from "../Services/api.js";
+import { useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import api from "../Services/api.js";
 
 export default function Checkout() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const { cart, loading } = useSelector((state) => state.cart);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const { cart } = useSelector((state) => state.cart);
+  const { token } = useSelector((state) => state.auth);
 
   const [form, setForm] = useState({
     name: "",
@@ -18,213 +15,156 @@ export default function Checkout() {
     city: "",
     phone: ""
   });
+  const [loading, setLoading] = useState(false);
 
-  // 🟢 LOAD CART
-  useEffect(() => {
-    dispatch(fetchCart());
-  }, [dispatch]);
+  const total = useMemo(() => {
+    if (!cart?.items?.length) {
+      return 0;
+    }
 
-  // 🟢 HANDLE INPUT
-  const handleChange = (e) => {
+    return cart.items.reduce(
+      (sum, item) => sum + item.productId.price * item.quantity,
+      0
+    );
+  }, [cart]);
+
+  const handleChange = (event) => {
     setForm({
       ...form,
-      [e.target.name]: e.target.value
+      [event.target.name]: event.target.value
     });
   };
 
-  // 💰 TOTAL PRICE
-  const total = cart?.items?.reduce((sum, item) => {
-      return sum + item.productId.price * item.quantity;
-    }, 0) || 0;
-
-  // 🚀 PLACE ORDER
-  const handlePlaceOrder = async () => {
-    // Basic validation
-    if (!form.name || !form.address || !form.city || !form.phone) {
-      toast.error("Please fill in all shipping details.", {
-        style: { background: '#111', color: '#ef4444', border: '1px solid #ef4444' }
-      });
+  const handlePay = async () => {
+    if (!token) {
+      toast.error("Please login first");
+      navigate("/login");
       return;
     }
 
-    setIsProcessing(true);
+    if (!cart?.items?.length) {
+      toast.error("Your cart is empty");
+      navigate("/cart");
+      return;
+    }
+
+    if (!form.name || !form.address || !form.city || !form.phone) {
+      toast.error("Please fill in all checkout fields");
+      return;
+    }
+
     try {
-      const token = localStorage.getItem("token");
+      setLoading(true);
 
-      const res = await api.post("/checkout", form, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const res = await api.post(
+        "/payment/create-checkout-session",
+        { customerInfo: form },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      });
+      );
 
-      console.log("ORDER CREATED:", res.data);
+      if (!res.data?.url) {
+        throw new Error("Checkout session URL was not returned");
+      }
 
-      toast.success("Order placed successfully!", {
-        style: { background: '#111', color: '#D4AF37', border: '1px solid #D4AF37' }
-      });
-
-      // 👉 go to orders page
-      navigate("/my-orders");
-
-    } catch (err) {
-      console.log(err);
-      toast.error("Failed to place order. Please try again.", {
-        style: { background: '#111', color: '#ef4444', border: '1px solid #ef4444' }
-      });
-    } finally {
-      setIsProcessing(false);
+      window.location.href = res.data.url;
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || error.message || "Checkout failed"
+      );
+      setLoading(false);
     }
   };
 
-  // Loading State
-  if (loading) {
-    return (
-      <div className="min-h-[calc(100vh-80px)] bg-black flex justify-center items-center">
-        <p className="text-[#D4AF37] animate-pulse text-xl font-serif tracking-widest uppercase">
-          Loading Checkout...
-        </p>
-      </div>
-    );
-  }
-
-  // Empty Cart Fallback
-  if (!cart || !cart.items?.length) {
-    return (
-      <div className="min-h-[calc(100vh-80px)] bg-black flex justify-center items-center flex-col">
-        <p className="text-gray-400 mb-4 tracking-widest uppercase">No items to checkout.</p>
-        <button 
-          onClick={() => navigate('/shop')}
-          className="text-[#D4AF37] hover:underline uppercase tracking-widest text-sm"
-        >
-          Return to Shop
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-[calc(100vh-80px)] bg-black text-gray-200 py-12 px-6 md:px-12 lg:px-24 flex flex-col lg:flex-row gap-12">
-      
-      {/* ================= LEFT: FORM ================= */}
-      <div className="w-full lg:w-2/3">
-        <h1 className="text-3xl md:text-4xl font-serif font-bold text-[#D4AF37] tracking-widest uppercase mb-10 border-b border-gray-800 pb-4">
-          Shipping Details
-        </h1>
+    <main className="min-h-[calc(100vh-80px)] bg-black px-6 py-12 text-gray-200 md:px-12 lg:px-24">
+      <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1fr_380px]">
+        <section className="rounded-sm border border-gray-800 bg-[#0a0a0a] p-8 shadow-2xl">
+          <p className="text-sm uppercase tracking-[0.3em] text-[#D4AF37]">
+            Checkout
+          </p>
+          <h1 className="mt-3 text-3xl font-serif font-bold text-white md:text-4xl">
+            Delivery Information
+          </h1>
 
-        <div className="bg-[#0a0a0a] border border-gray-800 p-8 rounded-sm shadow-xl space-y-6">
-          
-          {/* NAME */}
-          <div>
-            <label className="block text-gray-400 text-sm tracking-wide mb-2 uppercase">Full Name</label>
+          <div className="mt-8 grid gap-5">
             <input
               name="name"
-              placeholder="Enter your full name"
+              placeholder="Full Name"
               value={form.name}
               onChange={handleChange}
-              className="w-full bg-black border border-gray-800 text-gray-200 px-4 py-3 rounded-sm focus:outline-none focus:border-[#D4AF37] transition-colors duration-300 placeholder-gray-700"
+              className="w-full rounded-sm border border-gray-800 bg-black px-4 py-3 text-gray-200 placeholder-gray-600 focus:border-[#D4AF37] focus:outline-none"
             />
-          </div>
 
-          {/* ADDRESS & CITY (Grid layout for larger screens) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-gray-400 text-sm tracking-wide mb-2 uppercase">Street Address</label>
-              <input
-                name="address"
-                placeholder="Enter your street address"
-                value={form.address}
-                onChange={handleChange}
-                className="w-full bg-black border border-gray-800 text-gray-200 px-4 py-3 rounded-sm focus:outline-none focus:border-[#D4AF37] transition-colors duration-300 placeholder-gray-700"
-              />
-            </div>
+            <input
+              name="address"
+              placeholder="Address"
+              value={form.address}
+              onChange={handleChange}
+              className="w-full rounded-sm border border-gray-800 bg-black px-4 py-3 text-gray-200 placeholder-gray-600 focus:border-[#D4AF37] focus:outline-none"
+            />
 
-            <div>
-              <label className="block text-gray-400 text-sm tracking-wide mb-2 uppercase">City</label>
+            <div className="grid gap-5 md:grid-cols-2">
               <input
                 name="city"
-                placeholder="Enter your city"
+                placeholder="City"
                 value={form.city}
                 onChange={handleChange}
-                className="w-full bg-black border border-gray-800 text-gray-200 px-4 py-3 rounded-sm focus:outline-none focus:border-[#D4AF37] transition-colors duration-300 placeholder-gray-700"
+                className="w-full rounded-sm border border-gray-800 bg-black px-4 py-3 text-gray-200 placeholder-gray-600 focus:border-[#D4AF37] focus:outline-none"
+              />
+
+              <input
+                name="phone"
+                placeholder="Phone"
+                value={form.phone}
+                onChange={handleChange}
+                className="w-full rounded-sm border border-gray-800 bg-black px-4 py-3 text-gray-200 placeholder-gray-600 focus:border-[#D4AF37] focus:outline-none"
               />
             </div>
           </div>
+        </section>
 
-          {/* PHONE */}
-          <div>
-            <label className="block text-gray-400 text-sm tracking-wide mb-2 uppercase">Phone Number</label>
-            <input
-              name="phone"
-              placeholder="Enter your phone number"
-              value={form.phone}
-              onChange={handleChange}
-              className="w-full bg-black border border-gray-800 text-gray-200 px-4 py-3 rounded-sm focus:outline-none focus:border-[#D4AF37] transition-colors duration-300 placeholder-gray-700"
-            />
-          </div>
-
-        </div>
-      </div>
-
-      {/* ================= RIGHT: ORDER SUMMARY ================= */}
-      <div className="w-full lg:w-1/3">
-        <div className="bg-[#0a0a0a] border border-[#D4AF37]/30 p-8 rounded-sm lg:sticky top-24 shadow-2xl">
-          
-          <h2 className="text-xl font-serif text-[#D4AF37] tracking-widest uppercase mb-6 border-b border-gray-800 pb-4">
+        <aside className="rounded-sm border border-[#D4AF37]/30 bg-[#0a0a0a] p-8 shadow-2xl">
+          <h2 className="text-lg font-bold uppercase tracking-[0.25em] text-[#D4AF37]">
             Order Summary
           </h2>
 
-          <div className="space-y-4 mb-6">
+          <div className="mt-6 space-y-4">
             {cart?.items?.map((item) => (
-              <div key={item._id} className="flex justify-between items-center">
-                <div className="flex flex-col">
-                  <span className="font-serif text-gray-200 line-clamp-1">
-                    {item.productId.name}
-                  </span>
-                  <span className="text-xs text-gray-500 uppercase tracking-widest">
-                    Qty: {item.quantity}
-                  </span>
+              <div
+                key={item._id}
+                className="flex items-center justify-between gap-4 border-b border-gray-800 pb-4"
+              >
+                <div>
+                  <p className="font-medium text-white">{item.productId.name}</p>
+                  <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
                 </div>
-                <span className="text-gray-400 font-medium tracking-wider">
+                <p className="font-medium text-[#D4AF37]">
                   ${(item.productId.price * item.quantity).toLocaleString()}
-                </span>
+                </p>
               </div>
             ))}
           </div>
 
-          <div className="border-t border-gray-800 pt-6 mb-8">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-200 font-bold uppercase tracking-wider text-lg">Total</span>
-              <span className="text-[#D4AF37] font-bold text-3xl tracking-wider">
-                ${total.toLocaleString()}
-              </span>
+          <div className="mt-6 border-t border-gray-800 pt-6">
+            <div className="flex items-center justify-between text-lg font-semibold">
+              <span>Total</span>
+              <span className="text-[#D4AF37]">${total.toLocaleString()}</span>
             </div>
-            <p className="text-right text-xs text-gray-500 mt-2 uppercase tracking-widest">
-              Taxes and shipping included
-            </p>
           </div>
 
           <button
-            onClick={handlePlaceOrder}
-            disabled={isProcessing}
-            className="w-full bg-[#D4AF37] text-black py-4 rounded-sm font-bold uppercase tracking-widest hover:bg-[#b5952f] transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed flex justify-center items-center"
+            onClick={handlePay}
+            disabled={loading}
+            className="mt-8 w-full rounded-sm bg-[#D4AF37] py-4 font-bold uppercase tracking-widest text-black transition-colors hover:bg-[#b5952f] disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isProcessing ? (
-              <span className="animate-pulse">Processing...</span>
-            ) : (
-              "Confirm Order"
-            )}
+            {loading ? "Processing..." : "Pay Now"}
           </button>
-          
-          <p className="text-center text-xs text-gray-600 mt-6 tracking-wide flex items-center justify-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
-            Encrypted and secure payment
-          </p>
-
-        </div>
+        </aside>
       </div>
-
-    </div>
+    </main>
   );
 }

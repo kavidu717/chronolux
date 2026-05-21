@@ -7,6 +7,7 @@ import Products from "./Pages/Products"
 import ProductDetails from "./Pages/ProductDetails"
 import Cart from "./Pages/Cart"
 import Checkout from "./Pages/Checkout"
+import PaymentSuccess from "./Pages/PaymentSuccess"
 
 
 
@@ -25,6 +26,7 @@ function App() {
          <Route path="/products/:id" element={<ProductDetails />} />
          <Route path="/cart" element={<Cart />} />
          <Route path="/checkout" element={<Checkout />} />
+         <Route path="/payment-success" element={<PaymentSuccess />} />
 
 
 
