@@ -5,6 +5,8 @@ import Login from "./Pages/Login"
 import Register from "./Pages/Register"
 import Products from "./Pages/Products"
 import ProductDetails from "./Pages/ProductDetails"
+import Cart from "./Pages/Cart"
+import Checkout from "./Pages/Checkout"
 
 
 
@@ -21,6 +23,9 @@ function App() {
          <Route path="/register" element={<Register/>}/>
          <Route path="/shop" element={<Products/>}/>
          <Route path="/products/:id" element={<ProductDetails />} />
+         <Route path="/cart" element={<Cart />} />
+         <Route path="/checkout" element={<Checkout />} />
+
 
 
         

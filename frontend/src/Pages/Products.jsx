@@ -1,13 +1,15 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import {
   fetchProducts,
   setCategory,
   setBrand,
   setSearch
-} from "../features/products/productSlice";
+} from "../Features/products/productSlice";
+import { addToCart } from "../Features/cart/cartSlice";
 
-import { useNavigate } from "react-router-dom";
 export default function Products() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -15,14 +17,45 @@ export default function Products() {
   const { products, loading, category, brand, search } = useSelector(
     (state) => state.products
   );
+  const { token } = useSelector((state) => state.auth);
 
-  // 🔁 auto fetch when filters change
   useEffect(() => {
     dispatch(fetchProducts());
   }, [category, brand, search, dispatch]);
 
+  const handleAddToCart = async (event, productId) => {
+    // Prevent the click from bubbling up and triggering the card's navigate event
+    event.stopPropagation();
+
+    if (!token) {
+      toast.error("Please login first", {
+        style: { background: '#111', color: '#ef4444', border: '1px solid #ef4444' }
+      });
+      navigate("/login");
+      return;
+    }
+
+    try {
+      await dispatch(
+        addToCart({
+          productId,
+          quantity: 1
+        })
+      ).unwrap();
+
+      toast.success("Added to cart", {
+        style: { background: '#111', color: '#D4AF37', border: '1px solid #D4AF37' }
+      });
+      navigate("/cart");
+    } catch (error) {
+      toast.error(error?.message || "Failed to add item to cart", {
+        style: { background: '#111', color: '#ef4444', border: '1px solid #ef4444' }
+      });
+    }
+  };
+
   return (
-    <div className="flex flex-col md:flex-row gap-8 px-6 md:px-12 py-12 bg-black min-h-screen text-gray-200">
+    <div className="flex flex-col md:flex-row gap-8 px-6 md:px-12 py-12 bg-black min-h-[calc(100vh-80px)] text-gray-200">
       
       {/* ================= LEFT FILTER SIDEBAR ================= */}
       <div className="w-full md:w-1/4 lg:w-1/5 bg-[#0a0a0a] border border-[#D4AF37]/30 p-6 rounded-sm h-fit md:sticky top-24 shadow-2xl">
@@ -95,17 +128,17 @@ export default function Products() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {products.map((p) => (
+            {products.map((product) => (
               <div
-                key={p._id}
-               onClick={() => navigate(`/products/${p._id}`)}
-                className="bg-[#0a0a0a] border border-gray-800 hover:border-[#D4AF37]/50 rounded-sm overflow-hidden flex flex-col group transition-all duration-300 shadow-lg"
+                key={product._id}
+                onClick={() => navigate(`/products/${product._id}`)}
+                className="bg-[#0a0a0a] border border-gray-800 hover:border-[#D4AF37]/50 rounded-sm overflow-hidden flex flex-col group transition-all duration-300 shadow-lg cursor-pointer"
               >
-                {/* Product Image Area - NOW TAKING FULL SPACE */}
+                {/* Product Image Area - FULL SPACE */}
                 <div className="overflow-hidden bg-black h-64 w-full relative">
                   <img
-                    src={p.image}
-                    alt={p.name}
+                    src={product.image}
+                    alt={product.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
                   />
                 </div>
@@ -113,17 +146,20 @@ export default function Products() {
                 {/* Product Info */}
                 <div className="p-5 flex flex-col flex-grow">
                   <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">
-                    {p.brand}
+                    {product.brand}
                   </p>
                   <h2 className="font-serif text-lg text-gray-200 mb-2 line-clamp-1 group-hover:text-[#D4AF37] transition-colors duration-300">
-                    {p.name}
+                    {product.name}
                   </h2>
                   <p className="text-[#D4AF37] font-bold text-xl tracking-wider mt-auto mb-5">
-                    ${p.price?.toLocaleString()}
+                    ${product.price?.toLocaleString()}
                   </p>
 
                   {/* Add to Cart Button */}
-                  <button className="w-full border border-[#D4AF37] text-[#D4AF37] py-2.5 rounded-sm uppercase tracking-widest text-sm font-bold hover:bg-[#D4AF37] hover:text-black transition-all duration-300">
+                  <button
+                    onClick={(event) => handleAddToCart(event, product._id)}
+                    className="w-full border border-[#D4AF37] text-[#D4AF37] py-2.5 rounded-sm uppercase tracking-widest text-sm font-bold hover:bg-[#D4AF37] hover:text-black transition-all duration-300"
+                  >
                     Add to Cart
                   </button>
                 </div>

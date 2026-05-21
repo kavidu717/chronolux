@@ -22,6 +22,12 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true
     },
+      customerInfo: {
+      name: String,
+      address: String,
+      city: String,
+      phone: String
+    },
 
     status: {
       type: String,
