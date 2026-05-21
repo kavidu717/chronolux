@@ -5,6 +5,7 @@ import connectDB from './src/config/db.js'
 import authRoutes from './src/routes/authRoutes.js'
 import productRoutes from './src/routes/productRoutes.js'
 import cartRoutes from './src/routes/cartRoutes.js'
+import orderRoutes from './src/routes/orderRoutes.js'
 
 
 
@@ -26,6 +27,8 @@ app.get('/', (req, res) => {
 app.use("/api/auth",authRoutes)
 app.use("/api/products",productRoutes);
 app.use("/api/cart", cartRoutes);
+
+ app.use("/api/order", orderRoutes);
 
 console.log("CLOUD NAME:", process.env.CLOUDINARY_CLOUD_NAME);
 console.log("API KEY:", process.env.CLOUDINARY_API_KEY);
