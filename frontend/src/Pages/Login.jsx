@@ -22,10 +22,51 @@ export default function Login() {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(login(formData));
-  };
+   const handleSubmit = async (e) => {
+
+  e.preventDefault();
+
+  const res = await dispatch(
+    login(formData)
+  );
+
+  // 🟢 LOGIN SUCCESS
+  if (res.payload?.user) {
+
+    // 🟢 ADMIN LOGIN
+    if (res.payload.user.role === "admin") {
+
+      toast.success("Welcome Admin", {
+        style: {
+          background: "#111",
+          color: "#D4AF37",
+          border: "1px solid #D4AF37"
+        }
+      });
+
+      navigate("/admin");
+
+    }
+
+    // 🟢 NORMAL USER LOGIN
+    else {
+
+      toast.success("Login successful", {
+        style: {
+          background: "#111",
+          color: "#D4AF37",
+          border: "1px solid #D4AF37"
+        }
+      });
+
+      navigate("/");
+
+    }
+
+  }
+
+};
+  
 
   // 🎯 SUCCESS LOGIN
   useEffect(() => {

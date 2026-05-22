@@ -11,6 +11,8 @@ import PaymentSuccess from "./Pages/PaymentSuccess"
 import Profile from "./Pages/Profile"
 import MyOrders from "./Pages/MyOrders"
 
+import AdminLayout from "./Layout/AdminLayout"
+
 
 
 function App() {
@@ -38,6 +40,15 @@ function App() {
         
         
         </Route>
+
+
+        <Route path="/admin" element={<AdminLayout />} >
+        
+        
+        
+        </Route>
+
+        
         
 
       </Routes>

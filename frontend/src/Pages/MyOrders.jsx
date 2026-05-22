@@ -8,12 +8,12 @@ export default function MyOrders() {
 
   const { orders, loading } = useSelector((state) => state.orders);
 
-  // 🟢 LOAD ORDERS
+  
   useEffect(() => {
     dispatch(fetchMyOrders());
   }, [dispatch]);
 
-  // 🟢 LOADING STATE
+  
   if (loading) {
     return (
       <div className="min-h-[calc(100vh-80px)] bg-black flex justify-center items-center">
