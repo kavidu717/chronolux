@@ -8,3 +8,32 @@ export const getAdminProductsAPI = async () => {
   return res.data;
 
 };
+
+  export const deleteProductAPI = async (id) => {
+
+  const token = localStorage.getItem("token");
+
+  const res = await api.delete(
+    `/products/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
+
+  return res.data;
+};
+
+export const createProductAPI = async (formData) => {
+  const token = localStorage.getItem("token");
+
+  const res = await api.post("/products", formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return res.data;
+};

@@ -15,6 +15,8 @@ import AdminLayout from "./Layout/AdminLayout"
 import AdminUsers from "./Pages/Admin/AdminiUsers"
 import AdminDashBoard from "./Pages/Admin/AdminDashBoard"
 import AdminProducts from "./Pages/Admin/AdminProducts"
+import AdminAddProduct from "./Pages/Admin/AdminAddProduct"
+import AdminOrder from "./Pages/Admin/AdminOrder"
 
 
 
@@ -38,6 +40,7 @@ function App() {
          <Route path="/my-orders" element={<MyOrders />} />
 
 
+
         
         
         
@@ -50,7 +53,8 @@ function App() {
           <Route index element={<AdminDashBoard />} />
         <Route path="users" element={<AdminUsers/>}/>
         <Route path="products" element={<AdminProducts/>}/>
-        
+        <Route path="ad-pdroduct" element={<AdminAddProduct/>}/>
+        <Route path="orders" element={<AdminOrder/>}/>
         
         
         </Route>

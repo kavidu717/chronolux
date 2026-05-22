@@ -1,8 +1,13 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAdminProducts } from "../../Features/admin/adminProductSlice.js";
+import { deleteProduct } from "../../Features/admin/adminProductSlice.js";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+
 
 export default function AdminProducts() {
+    const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { products, loading, error } = useSelector(
@@ -24,6 +29,17 @@ export default function AdminProducts() {
       </div>
     );
   }
+const handleDelete = (id) => {
+
+  if (window.confirm("Delete this product?")) {
+
+    dispatch(deleteProduct(id));
+
+    toast.success("Product deleted");
+
+  }
+
+};
 
   return (
     <div className="w-full">
@@ -39,7 +55,9 @@ export default function AdminProducts() {
           </p>
         </div>
         
-        <button className="bg-[#D4AF37] text-black px-6 py-2.5 rounded-sm font-bold uppercase tracking-widest text-xs hover:bg-[#b5952f] transition-all shadow-[0_0_10px_rgba(212,175,55,0.2)] whitespace-nowrap w-fit">
+        <button
+        onClick={() => navigate("/admin/add-product")}
+         className="bg-[#D4AF37] text-black px-6 py-2.5 rounded-sm font-bold uppercase tracking-widest text-xs hover:bg-[#b5952f] transition-all shadow-[0_0_10px_rgba(212,175,55,0.2)] whitespace-nowrap w-fit">
           + Add Product
         </button>
       </div>
@@ -131,7 +149,7 @@ export default function AdminProducts() {
                       <button className="text-[#D4AF37] hover:text-[#b5952f] uppercase tracking-widest text-xs font-bold transition-colors">
                         Edit
                       </button>
-                      <button className="text-red-500 hover:text-red-400 uppercase tracking-widest text-xs font-bold transition-colors">
+                      <button onClick={() => handleDelete(product._id)} className="text-red-500 hover:text-red-400 uppercase tracking-widest text-xs font-bold transition-colors">
                         Delete
                       </button>
                     </div>

@@ -5,6 +5,8 @@ import cardReducer from "../Features/cart/cartSlice.js";
 import orderReducer from "../Features/orders/orderSlice.js";
 import adminReducer from "../Features/admin/adminSlice.js";
 import adminProductReducer from "../Features/admin/adminProductSlice.js";
+import adminOrderReducer from "../Features/admin/adminOrderSlice.js";
+
 
 export const store=configureStore({
     reducer:{
@@ -13,7 +15,9 @@ export const store=configureStore({
     cart:cardReducer,
     orders:orderReducer,
     admin:adminReducer,
-    adminProducts:adminProductReducer
+    adminProducts:adminProductReducer,
+    adminOrders:adminOrderReducer
+    
 
 
     }

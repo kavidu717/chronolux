@@ -5,7 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="51383308-23a0-427a-9106-a96cd1da4b38" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App/store.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App/store.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Features/admin/adminProductAPI.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Features/admin/adminProductAPI.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Features/admin/adminProductSlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Features/admin/adminProductSlice.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Features/admin/adminSlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Features/admin/adminSlice.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Layout/AdminLayout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Layout/AdminLayout.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Pages/Admin/AdminProducts.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Pages/Admin/AdminProducts.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -25,6 +25,7 @@ export const getAllUsers = createAsyncThunk(
   }
 );
 
+
 const initialState = {
   users: [],
   loading: false,

@@ -1,19 +1,31 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { Navigate, Outlet, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Navigate, Outlet, Link, useNavigate } from "react-router-dom";
 import { HiMenu, HiX } from "react-icons/hi";
+import { logout } from "../Features/auth/authSlice";
+
 
 export default function AdminDashboard() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
 
-  // 🛑 BLOCK NORMAL USERS
+  
   if (!user || user.role !== "admin") {
     return <Navigate to="/" />;
   }
 
   const toggleMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
   const closeMenu = () => setIsMobileMenuOpen(false);
+  const handleLogout = () => {
+    dispatch(logout());
+    closeMenu();
+    navigate("/login");
+  };
+
+ 
 
   return (
     <div className="flex h-screen bg-black font-sans text-gray-200 overflow-hidden">
@@ -107,6 +119,13 @@ export default function AdminDashboard() {
               <span className="text-xs text-[#D4AF37] uppercase tracking-wider">
                 System Admin
               </span>
+              <div>
+                <button 
+                onClick={handleLogout}
+                className="text-xs text-gray-400 hover:text-[#D4AF37] transition-colors">
+                  Sign Out
+                </button>
+              </div>
             </div>
           </div>
         </div>

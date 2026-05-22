@@ -4,7 +4,9 @@ import {
 } from "@reduxjs/toolkit";
 
 import {
-  getAdminProductsAPI
+  getAdminProductsAPI,
+    deleteProductAPI,
+    createProductAPI
 } from "./adminProductAPI.js";
 
 // 🟢 GET PRODUCTS
@@ -26,6 +28,39 @@ export const getAdminProducts = createAsyncThunk(
 
   }
 );
+
+ export const deleteProduct = createAsyncThunk(
+  "admin/deleteProduct",
+  async (id, thunkAPI) => {
+
+    try {
+
+      await deleteProductAPI(id);
+
+      return id;
+
+    } catch (err) {
+
+      return thunkAPI.rejectWithValue(
+        err.response?.data
+      );
+
+    }
+
+  }
+);
+ 
+export const createProduct = createAsyncThunk(
+  "admin/createProduct",
+  async (formData, thunkAPI) => {
+    try {
+      return await createProductAPI(formData);
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data);
+    }
+  }
+);
+
 
 const initialState = {
   products: [],
@@ -67,7 +102,21 @@ const adminProductSlice = createSlice({
           action.payload?.message ||
           "Failed to load products";
 
-      });
+      })
+
+       .addCase(createProduct.pending, (state) => {
+        state.loading = true;
+        state.success = false;
+      })
+      .addCase(createProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.products.push(action.payload);
+      })
+      .addCase(createProduct.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message;
+      })
 
   }
 });
