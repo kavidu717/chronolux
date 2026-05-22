@@ -53,10 +53,10 @@ function App() {
           <Route index element={<AdminDashBoard />} />
         <Route path="users" element={<AdminUsers/>}/>
         <Route path="products" element={<AdminProducts/>}/>
-        <Route path="ad-pdroduct" element={<AdminAddProduct/>}/>
+        <Route path="add-product" element={<AdminAddProduct/>}/>
         <Route path="orders" element={<AdminOrder/>}/>
         
-        
+      
         </Route>
 
         

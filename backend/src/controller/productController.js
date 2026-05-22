@@ -29,20 +29,36 @@ export const getProducts = async (req, res) => {
 
     let filter = {};
 
-    // brand filter
-    if (brand) filter.brand = brand;
+    if (brand && brand.trim() !== "") {
+      filter.brand = brand.trim();
+    }
 
-    // category filter
-    if (category) filter.category = category;
+    if (category && category.trim() !== "") {
+      filter.category = category.trim();
+    }
 
-    // search by name (LIKE)
-    if (search) {
-      filter.name = { $regex: search, $options: "i" };
+    if (search && search.trim() !== "") {
+      filter.name = {
+        $regex: search.trim(),
+        $options: "i",
+      };
     }
 
     const products = await Product.find(filter);
 
     res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// 🔥 GET FILTER OPTIONS (NO HARDCODE)
+export const getFilterOptions = async (req, res) => {
+  try {
+    const categories = await Product.distinct("category");
+    const brands = await Product.distinct("brand");
+
+    res.json({ categories, brands });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
