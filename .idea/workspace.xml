@@ -6,8 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="51383308-23a0-427a-9106-a96cd1da4b38" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App/store.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App/store.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Pages/Products.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Pages/Products.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

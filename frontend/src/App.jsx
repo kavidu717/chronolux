@@ -1,5 +1,5 @@
 import UserLayout from "./Layout/UserLayout"
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route} from "react-router-dom"
 import Home from "./Pages/Home"
 import Login from "./Pages/Login"
 import Register from "./Pages/Register"
@@ -12,6 +12,8 @@ import Profile from "./Pages/Profile"
 import MyOrders from "./Pages/MyOrders"
 
 import AdminLayout from "./Layout/AdminLayout"
+import AdminUsers from "./Pages/Admin/AdminiUsers"
+import AdminDashBoard from "./Pages/Admin/AdminDashBoard"
 
 
 
@@ -43,6 +45,9 @@ function App() {
 
 
         <Route path="/admin" element={<AdminLayout />} >
+
+          <Route index element={<AdminDashBoard />} />
+        <Route path="users" element={<AdminUsers/>}/>
         
         
         

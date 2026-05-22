@@ -8,7 +8,7 @@ export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { loading, error, token } = useSelector((state) => state.auth);
+  const { loading, error, token, user } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -71,16 +71,9 @@ export default function Login() {
   // 🎯 SUCCESS LOGIN
   useEffect(() => {
     if (token) {
-      toast.success("Login successful", {
-        style: {
-          background: '#111',
-          color: '#D4AF37',
-          border: '1px solid #D4AF37'
-        }
-      });
-      navigate("/");
+      navigate(user?.role === "admin" ? "/admin" : "/");
     }
-  }, [token, navigate]);
+  }, [token, user, navigate]);
 
   return (
     <div className="flex justify-center items-center min-h-[calc(100vh-80px)] bg-black px-4 py-12">
