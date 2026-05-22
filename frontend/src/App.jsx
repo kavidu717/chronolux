@@ -14,6 +14,7 @@ import MyOrders from "./Pages/MyOrders"
 import AdminLayout from "./Layout/AdminLayout"
 import AdminUsers from "./Pages/Admin/AdminiUsers"
 import AdminDashBoard from "./Pages/Admin/AdminDashBoard"
+import AdminProducts from "./Pages/Admin/AdminProducts"
 
 
 
@@ -48,6 +49,7 @@ function App() {
 
           <Route index element={<AdminDashBoard />} />
         <Route path="users" element={<AdminUsers/>}/>
+        <Route path="products" element={<AdminProducts/>}/>
         
         
         
