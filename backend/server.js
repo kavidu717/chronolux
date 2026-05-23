@@ -14,6 +14,8 @@ import invoiceRoutes from './src/routes/invoiceRoutes.js'
 
 const app = express()
 
+dotenv.config()
+
 
 app.use(cors())
 app.use(express.json())
