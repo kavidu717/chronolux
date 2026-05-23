@@ -41,9 +41,9 @@ export const createCheckoutSession = async (req, res) => {
       line_items,
 
       success_url:
-        "http://localhost:5173/payment-success?session_id={CHECKOUT_SESSION_ID}",
+        "https://chronolux-alpha.vercel.app/payment-success?session_id={CHECKOUT_SESSION_ID}",
 
-      cancel_url: "http://localhost:5173/checkout",
+      cancel_url: "https://chronolux-alpha.vercel.app/checkout",
 
       metadata: {
         userId: req.user.id,
