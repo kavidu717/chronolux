@@ -11,6 +11,7 @@ import PaymentSuccess from "./Pages/PaymentSuccess"
 import Profile from "./Pages/Profile"
 import MyOrders from "./Pages/MyOrders"
 import About from "./Pages/About"
+import Contact from "./Pages/Contact"
 
 
 
@@ -45,6 +46,7 @@ function App() {
          <Route path="/profile" element={<Profile />} />
          <Route path="/my-orders" element={<MyOrders />} />
          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
 
 
 

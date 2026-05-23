@@ -88,7 +88,7 @@ export default function Header() {
                 </Link>
                 <Link
                   to="/register"
-                  className="bg-[#D4AF37] text-black px-6 py-2 text-xs font-medium tracking-widest hover:bg-white transition-colors duration-300 shadow-[0_0_15px_rgba(212,175,55,0.1)] hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+                  className="bg-[#db6115] text-black px-6 py-2 text-xs font-medium tracking-widest hover:bg-white transition-colors duration-300 shadow-[0_0_15px_rgba(212,175,55,0.1)] hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]"
                 >
                   REGISTER
                 </Link>
