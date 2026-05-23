@@ -10,6 +10,12 @@ import Checkout from "./Pages/Checkout"
 import PaymentSuccess from "./Pages/PaymentSuccess"
 import Profile from "./Pages/Profile"
 import MyOrders from "./Pages/MyOrders"
+import About from "./Pages/About"
+
+
+
+
+
 
 import AdminLayout from "./Layout/AdminLayout"
 import AdminUsers from "./Pages/Admin/AdminiUsers"
@@ -38,6 +44,7 @@ function App() {
          <Route path="/payment-success" element={<PaymentSuccess />} />
          <Route path="/profile" element={<Profile />} />
          <Route path="/my-orders" element={<MyOrders />} />
+         <Route path="/about" element={<About />} />
 
 
 
