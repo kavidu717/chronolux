@@ -75,39 +75,41 @@ export default function MyOrders() {
 
                 {/* ================= ORDER ITEMS ================= */}
                 <div className="p-6 md:p-8 space-y-6">
-                  {order.items.map((item) => (
-                    <div
-                      key={item._id}
-                      className="flex flex-col sm:flex-row items-center sm:items-start gap-6 border-b border-gray-800/50 pb-6 last:border-0 last:pb-0"
-                    >
-                      {/* IMAGE */}
-                      <div className="w-24 h-24 flex-shrink-0 bg-black border border-gray-800 rounded-sm overflow-hidden p-2">
-                        <img
-                          src={item.productId.image}
-                          alt={item.productId.name}
-                          className="w-full h-full object-contain"
-                        />
-                      </div>
+                 {order.items.map((item) => (
+  <div
+    key={item._id}
+    className="flex flex-col sm:flex-row items-center sm:items-start gap-6 border-b border-gray-800/50 pb-6 last:border-0 last:pb-0"
+  >
+    {/* IMAGE */}
+    <div className="w-24 h-24 flex-shrink-0 bg-black border border-gray-800 rounded-sm overflow-hidden p-2">
+      <img
+        src={item.productId?.image || "/no-image.png"}
+        alt={item.productId?.name || "Product"}
+        className="w-full h-full object-contain"
+      />
+    </div>
 
-                      {/* INFO */}
-                      <div className="flex-1 text-center sm:text-left">
-                        <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">
-                          {item.productId.brand}
-                        </p>
-                        <h3 className="font-serif text-lg text-gray-200 mb-2 line-clamp-1">
-                          {item.productId.name}
-                        </h3>
-                        <p className="text-gray-400 text-sm uppercase tracking-wider">
-                          Qty: <span className="text-white">{item.quantity}</span>
-                        </p>
-                      </div>
+    {/* INFO */}
+    <div className="flex-1 text-center sm:text-left">
+      <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">
+        {item.productId?.brand || "Unknown Brand"}
+      </p>
 
-                      {/* PRICE */}
-                      <div className="text-[#D4AF37] font-bold text-lg tracking-wide mt-4 sm:mt-0">
-                        ${(item.price * item.quantity).toLocaleString()}
-                      </div>
-                    </div>
-                  ))}
+      <h3 className="font-serif text-lg text-gray-200 mb-2 line-clamp-1">
+        {item.productId?.name || "Product Removed"}
+      </h3>
+
+      <p className="text-gray-400 text-sm uppercase tracking-wider">
+        Qty: <span className="text-white">{item.quantity}</span>
+      </p>
+    </div>
+
+    {/* PRICE */}
+    <div className="text-[#D4AF37] font-bold text-lg tracking-wide mt-4 sm:mt-0">
+      ${(item.price * item.quantity).toLocaleString()}
+    </div>
+  </div>
+))}
                 </div>
 
                 {/* ================= ORDER TOTAL ================= */}
