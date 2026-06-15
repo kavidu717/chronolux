@@ -21,6 +21,7 @@ A comprehensive, modern online watch shopping web application designed to delive
 
 The project follows a clean decoupled architecture, structured perfectly for a production deployment on an AWS EC2 instance:
 
+```text
 chrono-lux/
 ├── backend/               # Express.js server, API routes, Controllers, Models
 │   ├── config/            # Database and environment configurations
@@ -31,7 +32,7 @@ chrono-lux/
 │   ├── src/
 │   │   ├── components/    # Reusable UI components
 │   │   ├── pages/         # Application screens (Home, Product, Cart, etc.)
-│   │   ├
+│   │   ├── redux/         # Redux actions, reducers, and store setup
 │   │   └── App.js         # Main React component
 │   └── package.json       
 └── README.md              # Project documentation
