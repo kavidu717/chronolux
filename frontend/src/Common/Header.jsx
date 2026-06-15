@@ -2,10 +2,11 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../Features/auth/authSlice";
-import { HiOutlineShoppingBag, HiMenu, HiX } from "react-icons/hi";
+import { HiOutlineShoppingBag, HiMenu, HiX, HiChevronDown, HiUserCircle } from "react-icons/hi";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -15,148 +16,106 @@ export default function Header() {
   const handleLogout = () => {
     dispatch(logout());
     setIsMenuOpen(false);
+    setIsProfileOpen(false);
     navigate("/");
   };
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => {
     setIsMenuOpen(false);
+    setIsProfileOpen(false);
   };
 
-  // 1. Added sticky top and backdrop blur for a premium glass effect
   return (
     <header className="sticky top-0 w-full bg-black/90 backdrop-blur-md text-stone-200 border-b border-[#D4AF37]/20 shadow-xl z-50">
       <div className="max-w-7xl mx-auto px-6 md:px-12 py-5 flex items-center justify-between">
         
-        {/* LEFT - LOGO */}
-        <div className="text-2xl md:text-3xl font-serif font-light text-white tracking-[0.15em] uppercase z-50 flex items-center">
-          <Link to="/" onClick={closeMenu} className="group flex items-center">
+        {/* LOGO */}
+        <div className="text-2xl md:text-3xl font-serif font-light text-white tracking-[0.15em] uppercase z-50">
+          <Link to="/" onClick={closeMenu} className="flex items-center">
             LUXE <span className="text-[#D4AF37] ml-2 font-medium">WATCHES</span>
           </Link>
         </div>
 
-        {/* DESKTOP NAV & AUTH (Hidden on Mobile) */}
+        {/* DESKTOP NAV */}
         <div className="hidden md:flex items-center space-x-10 text-sm font-sans tracking-widest uppercase">
-          
           <nav className="flex items-center space-x-8">
-            <Link to="/" className="relative group text-stone-300 hover:text-white transition-colors duration-300">
-              Home
-              <span className="absolute -bottom-1.5 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover:w-full"></span>
-            </Link>
-            <Link to="/shop" className="relative group text-stone-300 hover:text-white transition-colors duration-300">
-              Shop
-              <span className="absolute -bottom-1.5 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover:w-full"></span>
-            </Link>
-            <Link to="/about" className="relative group text-stone-300 hover:text-white transition-colors duration-300">
-              About
-              <span className="absolute -bottom-1.5 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover:w-full"></span>
-            </Link>
+            <Link to="/" className="text-stone-300 hover:text-white transition-colors">Home</Link>
+            <Link to="/shop" className="text-stone-300 hover:text-white transition-colors">Shop</Link>
+            <Link to="/about" className="text-stone-300 hover:text-white transition-colors">About</Link>
           </nav>
 
-          {/* Subtle Divider */}
           <div className="h-5 w-[1px] bg-stone-700"></div>
 
-          {/* 🛒 Cart */}
-          <Link to="/cart" className="relative text-stone-300 hover:text-[#D4AF37] transition-all duration-300 hover:scale-110 flex items-center">
+          <Link to="/cart" className="text-stone-300 hover:text-[#D4AF37] transition-all duration-300 hover:scale-110">
             <HiOutlineShoppingBag className="text-2xl" />
           </Link>
 
-          {/* Auth Section */}
-          <div className="flex items-center space-x-6">
+          {/* AUTH / PROFILE */}
+          <div className="relative flex items-center space-x-6">
             {isAuthenticated ? (
-              <>
-                <span className="text-[#D4AF37] tracking-wider capitalize">
-                  Hi, {user?.name || "Guest"}
-                </span>
-                <Link to="/profile" className="text-stone-300 hover:text-white transition-colors duration-300">
-                  Profile
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="border border-[#D4AF37]/50 text-[#D4AF37] px-6 py-2 text-xs font-medium tracking-widest hover:bg-[#D4AF37] hover:text-black transition-all duration-300"
+              <div className="relative">
+                <button 
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                  className="flex items-center gap-2 text-stone-300 hover:text-[#D4AF37] transition-colors"
                 >
-                  LOGOUT
+                  <HiUserCircle className="text-3xl" />
+                  <HiChevronDown className={`transition-transform ${isProfileOpen ? 'rotate-180' : ''}`} />
                 </button>
-              </>
+                
+                {isProfileOpen && (
+                  <div className="absolute right-0 top-full mt-3 w-48 bg-[#0a0a0a] border border-[#D4AF37]/30 shadow-2xl py-2 z-50 rounded-sm">
+                    <div className="px-6 py-2 text-[#D4AF37] text-xs uppercase tracking-widest border-b border-[#D4AF37]/10 mb-1">
+                      {user?.name || "User"}
+                    </div>
+                    <Link to="/profile" onClick={closeMenu} className="block px-6 py-2 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] transition-colors">Profile</Link>
+                    <Link to="/my-orders" onClick={closeMenu} className="block px-6 py-2 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] transition-colors">Bookings</Link>
+                    <button onClick={handleLogout} className="block w-full text-left px-6 py-2 text-red-400 hover:bg-red-900/20 transition-colors">Logout</button>
+                  </div>
+                )}
+              </div>
             ) : (
               <>
-                <Link to="/login" className="text-stone-300 hover:text-white transition-colors duration-300">
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  className="bg-[#db6115] text-black px-6 py-2 text-xs font-medium tracking-widest hover:bg-white transition-colors duration-300 shadow-[0_0_15px_rgba(212,175,55,0.1)] hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]"
-                >
-                  REGISTER
-                </Link>
+                <Link to="/login" className="text-stone-300 hover:text-white transition-colors">Login</Link>
+                <Link to="/register" className="bg-[#db6115] text-black px-6 py-2 text-xs font-medium tracking-widest hover:bg-white transition-colors">REGISTER</Link>
               </>
             )}
           </div>
         </div>
 
-        {/* MOBILE CONTROLS (Cart & Hamburger Menu) */}
+        {/* MOBILE CONTROLS */}
         <div className="md:hidden flex items-center space-x-6 z-50">
-          <Link to="/cart" className="text-stone-300 hover:text-[#D4AF37] transition-colors duration-300" onClick={closeMenu}>
-            <HiOutlineShoppingBag className="text-2xl" />
-          </Link>
-          <button 
-            onClick={toggleMenu} 
-            className="text-stone-300 focus:outline-none hover:text-[#D4AF37] transition-colors"
-          >
-            {isMenuOpen ? <HiX className="text-3xl" /> : <HiMenu className="text-3xl" />}
+          <Link to="/cart" onClick={closeMenu}><HiOutlineShoppingBag className="text-2xl" /></Link>
+          <button onClick={toggleMenu} className="text-stone-300 text-3xl">
+            {isMenuOpen ? <HiX /> : <HiMenu />}
           </button>
         </div>
       </div>
 
-      {/* MOBILE DROPDOWN MENU */}
-      <div 
-        className={`md:hidden absolute top-full left-0 w-full bg-black/95 backdrop-blur-xl border-b border-[#D4AF37]/20 transition-all duration-500 ease-in-out overflow-hidden flex flex-col items-center uppercase text-sm tracking-widest font-sans ${
-          isMenuOpen ? "max-h-[500px] opacity-100 py-8 space-y-6" : "max-h-0 opacity-0 py-0 space-y-0"
-        }`}
-      >
-        <Link to="/" onClick={closeMenu} className="text-stone-300 hover:text-[#D4AF37] transition-colors duration-300 w-full text-center">
-          Home
-        </Link>
-        <Link to="/shop" onClick={closeMenu} className="text-stone-300 hover:text-[#D4AF37] transition-colors duration-300 w-full text-center">
-          Shop
-        </Link>
-        <Link to="/about" onClick={closeMenu} className="text-stone-300 hover:text-[#D4AF37] transition-colors duration-300 w-full text-center">
-          About
-        </Link>
+      {/* MOBILE DROPDOWN */}
+      <div className={`md:hidden absolute top-full left-0 w-full bg-black/95 backdrop-blur-xl border-b border-[#D4AF37]/20 overflow-hidden flex flex-col items-center space-y-6 transition-all duration-500 ${isMenuOpen ? "max-h-[500px] py-8" : "max-h-0 py-0"}`}>
+        <Link to="/" onClick={closeMenu} className="text-stone-300">Home</Link>
+        <Link to="/shop" onClick={closeMenu} className="text-stone-300">Shop</Link>
         
-        <div className="w-16 h-[1px] bg-stone-700 my-4"></div>
-
         {isAuthenticated ? (
-          <>
-            <span className="text-[#D4AF37] w-full text-center capitalize">
-              Hi, {user?.name || "Guest"}
-            </span>
-            <Link to="/profile" onClick={closeMenu} className="text-stone-300 hover:text-[#D4AF37] transition-colors duration-300 w-full text-center">
-              Profile
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="border border-[#D4AF37]/50 text-[#D4AF37] px-8 py-2.5 mt-2 hover:bg-[#D4AF37] hover:text-black transition-all duration-300 inline-block"
+          <div className="relative flex flex-col items-center w-full">
+            <button 
+              onClick={() => setIsProfileOpen(!isProfileOpen)} 
+              className="flex items-center gap-2 text-[#D4AF37] border border-[#D4AF37] px-6 py-2 rounded-sm"
             >
-              LOGOUT
+              <HiUserCircle className="text-2xl" /> ACCOUNT
             </button>
-          </>
-        ) : (
-          <div className="flex flex-col space-y-5 w-full items-center px-8">
-            <Link to="/login" onClick={closeMenu} className="text-stone-300 hover:text-[#D4AF37] transition-colors duration-300">
-              Login
-            </Link>
-            <Link 
-              to="/register" 
-              onClick={closeMenu}
-              className="bg-[#D4AF37] text-black w-full max-w-[200px] text-center px-8 py-3 hover:bg-white transition-colors duration-300"
-            >
-              REGISTER
-            </Link>
+            
+            {isProfileOpen && (
+              <div className="flex flex-col items-center mt-4 space-y-4 bg-[#111] w-full py-4">
+                <Link to="/profile" onClick={closeMenu} className="text-stone-300">Profile</Link>
+                <Link to="/my-orders" onClick={closeMenu} className="text-stone-300">Bookings</Link>
+                <button onClick={handleLogout} className="text-red-400">Logout</button>
+              </div>
+            )}
           </div>
+        ) : (
+          <Link to="/login" onClick={closeMenu} className="text-stone-300">Login</Link>
         )}
       </div>
     </header>
