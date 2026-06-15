@@ -24,7 +24,7 @@ import AdminDashBoard from "./Pages/Admin/AdminDashBoard"
 import AdminProducts from "./Pages/Admin/AdminProducts"
 import AdminAddProduct from "./Pages/Admin/AdminAddProduct"
 import AdminOrder from "./Pages/Admin/AdminOrder"
-
+import ScrollToTop from "./Components/ScrollToTop"
 
 
 function App() {
@@ -32,7 +32,9 @@ function App() {
 
   return (
     <>
+     <ScrollToTop />
       <Routes>
+       
         
         <Route path="/" element={<UserLayout />} >
         <Route index element={<Home />} />
