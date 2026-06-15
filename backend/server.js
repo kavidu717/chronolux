@@ -8,6 +8,7 @@ import cartRoutes from './src/routes/cartRoutes.js'
 import orderRoutes from './src/routes/orderRoutes.js'
 import paymentRoutes from './src/routes/paymentRoutes.js'
 import invoiceRoutes from './src/routes/invoiceRoutes.js'
+import chatRoutes from './src/routes/chatRoutes.js'
 
 
 
@@ -35,6 +36,8 @@ app.use("/api/cart", cartRoutes);
 
 app.use("/api/payment", paymentRoutes);
 app.use("/api/invoice", invoiceRoutes);
+
+app.use("/api/chat", chatRoutes);
 
 
 app.listen(5000, () => {
