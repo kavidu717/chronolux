@@ -32,7 +32,7 @@ chrono-lux/
 │   ├── src/
 │   │   ├── components/    # Reusable UI components
 │   │   ├── pages/         # Application screens (Home, Product, Cart, etc.)
-│   │   ├── redux/         # Redux actions, reducers, and store setup
+│   │   ├
 │   │   └── App.js         # Main React component
 │   └── package.json       
 └── README.md              # Project documentation
