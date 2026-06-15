@@ -48,6 +48,7 @@ export default function Contact() {
                 <p className="text-amber-500 font-semibold tracking-widest uppercase text-sm mt-1">Administrator</p>
               </div>
             </div>
+           
 
             {/* Contact Details List */}
             <div className="space-y-6 pt-2">

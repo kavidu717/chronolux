@@ -23,9 +23,7 @@ app.use(express.json())
 
 connectDB()
 
-app.get('/', (req, res) => {
-    res.send('backend running kaviduheloo with docker hello neda kavidu')
-})
+
 
 app.use("/api/auth",authRoutes)
 app.use("/api/products",productRoutes);
@@ -33,8 +31,7 @@ app.use("/api/cart", cartRoutes);
 
  app.use("/api/order", orderRoutes);
 
-console.log("CLOUD NAME:", process.env.CLOUDINARY_CLOUD_NAME);
-console.log("API KEY:", process.env.CLOUDINARY_API_KEY);
+
 
 app.use("/api/payment", paymentRoutes);
 app.use("/api/invoice", invoiceRoutes);
