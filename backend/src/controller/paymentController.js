@@ -2,6 +2,7 @@ import Stripe from "stripe";
 import Cart from "../models/Cart.js";
 import Order from "../models/Order.js";
 
+
 const getStripe = () => {
   if (!process.env.STRIPE_SECRET_KEY) {
     throw new Error("STRIPE_SECRET_KEY is not configured");
@@ -10,7 +11,7 @@ const getStripe = () => {
   return new Stripe(process.env.STRIPE_SECRET_KEY);
 };
 
-// ================= CREATE PAYMENT SESSION =================
+
 export const createCheckoutSession = async (req, res) => {
   try {
     const stripe = getStripe();
@@ -40,10 +41,8 @@ export const createCheckoutSession = async (req, res) => {
 
       line_items,
 
-      success_url:
-        "https://chronolux-alpha.vercel.app/payment-success?session_id={CHECKOUT_SESSION_ID}",
-
-      cancel_url: "https://chronolux-alpha.vercel.app/checkout",
+     success_url: `${process.env.CLIENT_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+     cancel_url: `${process.env.CLIENT_URL}/checkout`,
 
       metadata: {
         userId: req.user.id,

@@ -40,7 +40,7 @@ export default function PaymentSuccess() {
         const orderId = res.data?.order?._id;
 
         if (orderId) {
-          window.open(`https://chronolux-1rge.onrender.com/api/invoice/${orderId}`, "_blank");
+          window.open(`http://localhost:5000/api/invoice/${orderId}`, "_blank");
         }
 
         setStatus("success");
