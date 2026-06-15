@@ -3,6 +3,7 @@ import WatchDetailSection from "../Components/WatchDetailSection"
 import NewAdd from "../Components/NewAdd"
 import { useEffect } from "react";
 
+
 export default function Home(){
  
     useEffect(() => {
@@ -15,6 +16,7 @@ export default function Home(){
 
        <WatchDetailSection />
        <NewAdd />
+       
         </>
        
     )
