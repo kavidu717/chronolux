@@ -25,26 +25,31 @@ export const createProduct = async (req, res) => {
 
 export const getProducts = async (req, res) => {
   try {
-    const { brand, category, search } = req.query;
+    // 1. Destructure limit and sort from req.query
+    const { brand, category, search, limit, sort } = req.query;
 
     let filter = {};
 
-    if (brand && brand.trim() !== "") {
-      filter.brand = brand.trim();
-    }
-
-    if (category && category.trim() !== "") {
-      filter.category = category.trim();
-    }
-
+    if (brand && brand.trim() !== "") filter.brand = brand.trim();
+    if (category && category.trim() !== "") filter.category = category.trim();
     if (search && search.trim() !== "") {
-      filter.name = {
-        $regex: search.trim(),
-        $options: "i",
-      };
+      filter.name = { $regex: search.trim(), $options: "i" };
     }
 
-    const products = await Product.find(filter);
+    // 2. Build the query
+    let query = Product.find(filter);
+
+    // 3. Apply sorting
+    if (sort === "newest") {
+      query = query.sort({ createdAt: -1 }); // Assuming you have a createdAt field
+    }
+
+    // 4. Apply limit
+    if (limit) {
+      query = query.limit(Number(limit));
+    }
+
+    const products = await query.exec();
 
     res.json(products);
   } catch (error) {
