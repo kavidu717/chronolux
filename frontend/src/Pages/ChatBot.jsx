@@ -24,7 +24,7 @@ export default function Chatbot() {
     setMessages((prev) => [...prev, { text: "Thinking...", sender: "bot", isLoading: true }]);
 
     try {
-      // 🟢 ඔයාගේ Backend URL එක හරියටම දෙන්න
+     
       const response = await fetch("http://localhost:5000/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
