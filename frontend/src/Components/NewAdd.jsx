@@ -67,7 +67,7 @@ const HomePage = () => {
           {loading ? (
             <p className="text-center text-gray-400">Loading...</p>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {newArrivals.map((product) => (
                 <div 
                   key={product._id} 
